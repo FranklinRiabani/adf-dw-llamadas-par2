@@ -1,0 +1,59 @@
+{
+	"name": "df_dim_destino",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "llamadas_tigo_csv",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          DESCRIPCION as string,",
+				"          TIPO as string,",
+				"          NUMERO_ORIGEN as string,",
+				"          NUMERO_DESTINO as string,",
+				"          FECHA as string,",
+				"          HORA as string,",
+				"          DURACION as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          NUMERO_DESTINO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(NUMERO_DESTINO = iifNull(NUMERO_DESTINO,\"NA\",NUMERO_DESTINO)) ~> derivedColumn1",
+				"derivedColumn1 derive(NUMERO_DESTINO = trim(NUMERO_DESTINO)) ~> derivedColumn2",
+				"derivedColumn2 sort(asc(NUMERO_DESTINO, true)) ~> sort1",
+				"sort1 aggregate(groupBy(NUMERO_DESTINO),",
+				"     each(match(name!=\"NUMERO_DESTINO\"), $$ = first($$))) ~> aggregate1"
+			]
+		}
+	}
+}
