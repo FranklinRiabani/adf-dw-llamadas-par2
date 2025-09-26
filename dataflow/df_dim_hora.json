@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_dim_hora",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1"
@@ -28,6 +36,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "cast1"
 				}
 			],
 			"scriptLines": [
@@ -52,7 +63,30 @@
 				"derivedColumn1 derive(HORA = trim(HORA)) ~> derivedColumn2",
 				"derivedColumn2 sort(asc(HORA, true)) ~> sort1",
 				"sort1 aggregate(groupBy(HORA),",
-				"     each(match(name !=\"HORA\"), $$ = first($$))) ~> aggregate1"
+				"     each(match(name !=\"HORA\"), $$ = first($$))) ~> aggregate1",
+				"aggregate1 cast(output(",
+				"          HORA as timestamp 'HH:mm:ss'",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_hora as integer,",
+				"          hora as timestamp,",
+				"          hora24 as integer,",
+				"          hora12 as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          hora = HORA",
+				"     )) ~> sink1"
 			]
 		}
 	}
