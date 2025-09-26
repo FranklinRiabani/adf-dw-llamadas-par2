@@ -1,0 +1,59 @@
+{
+	"name": "df_dim_hora",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "llamadas_tigo_csv",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          DESCRIPCION as string,",
+				"          TIPO as string,",
+				"          NUMERO_ORIGEN as string,",
+				"          NUMERO_DESTINO as string,",
+				"          FECHA as string,",
+				"          HORA as string,",
+				"          DURACION as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          HORA",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(HORA = iifNull(HORA, \"00:00:01\", HORA)) ~> derivedColumn1",
+				"derivedColumn1 derive(HORA = trim(HORA)) ~> derivedColumn2",
+				"derivedColumn2 sort(asc(HORA, true)) ~> sort1",
+				"sort1 aggregate(groupBy(HORA),",
+				"     each(match(name !=\"HORA\"), $$ = first($$))) ~> aggregate1"
+			]
+		}
+	}
+}
