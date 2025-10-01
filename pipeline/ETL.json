@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "dimTIpo",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -27,11 +27,11 @@
 				}
 			},
 			{
-				"name": "Data flow2",
+				"name": "dimOrigen",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Data flow1",
+						"activity": "dimTIpo",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -58,11 +58,11 @@
 				}
 			},
 			{
-				"name": "Data flow3",
+				"name": "dimDestino",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Data flow2",
+						"activity": "dimOrigen",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -89,11 +89,11 @@
 				}
 			},
 			{
-				"name": "Data flow4",
+				"name": "dimFecha",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Data flow3",
+						"activity": "dimDestino",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -120,11 +120,11 @@
 				}
 			},
 			{
-				"name": "Data flow5",
+				"name": "dimHora",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Data flow4",
+						"activity": "dimFecha",
 						"dependencyConditions": [
 							"Succeeded"
 						]
