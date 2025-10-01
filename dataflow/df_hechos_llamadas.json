@@ -17,6 +17,34 @@
 						"type": "DatasetReference"
 					},
 					"name": "dimTipo"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dim_origen",
+						"type": "DatasetReference"
+					},
+					"name": "dimOrigen"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dim_destino",
+						"type": "DatasetReference"
+					},
+					"name": "dimDestino"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dim_fecha",
+						"type": "DatasetReference"
+					},
+					"name": "dimFecha"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dim_hora",
+						"type": "DatasetReference"
+					},
+					"name": "dimHora"
 				}
 			],
 			"sinks": [],
@@ -26,6 +54,18 @@
 				},
 				{
 					"name": "lookup1"
+				},
+				{
+					"name": "lookup2"
+				},
+				{
+					"name": "lookup3"
+				},
+				{
+					"name": "castFecha"
+				},
+				{
+					"name": "lookup4"
 				}
 			],
 			"scriptLines": [
@@ -49,16 +89,69 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> dimTipo",
+				"source(output(",
+				"          id_origen as integer,",
+				"          numero_origen as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dimOrigen",
+				"source(output(",
+				"          id_destino as integer,",
+				"          numero_destino as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dimDestino",
+				"source(output(",
+				"          id_fecha as integer,",
+				"          fecha as date,",
+				"          {año} as integer,",
+				"          mes as integer,",
+				"          mes_texto as string,",
+				"          dia_texto as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dimFecha",
+				"source(output(",
+				"          id_hora as integer,",
+				"          hora as timestamp,",
+				"          hora_texto as string,",
+				"          hora24 as integer,",
+				"          hora12 as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dimHora",
 				"source1 cast(output(",
-				"          FECHA as date 'dd/MM/yyyy',",
-				"          HORA as timestamp 'HH:mm:ss',",
 				"          DURACION as integer",
 				"     ),",
 				"     errors: true) ~> cast1",
 				"cast1, dimTipo lookup(source1@TIPO === dimTipo@tipo,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1"
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1, dimOrigen lookup(source1@NUMERO_ORIGEN == dimOrigen@numero_origen,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup2",
+				"lookup2, dimDestino lookup(source1@NUMERO_DESTINO == dimDestino@numero_destino,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup3",
+				"dimFecha cast(output(",
+				"          fecha as string",
+				"     ),",
+				"     errors: true) ~> castFecha",
+				"lookup3, dimHora lookup(source1@HORA == hora_texto,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup4"
 			]
 		}
 	}
