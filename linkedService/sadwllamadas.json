@@ -5,8 +5,8 @@
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
-			"connectionString": "DefaultEndpointsProtocol=https;AccountName=sallamadastigo53464564;EndpointSuffix=core.windows.net;",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEQ3RDBGRTAwLTA4M0EtNDE1Ny04NzQxLUU2QUZGNUMwMTMzOF83MmQzNGM0OS0zMDg0LTRmNjUtODYxMi03MTFhM2VhOWI3MWEiDQp9"
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=sallamadastigo4654658;EndpointSuffix=core.windows.net;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDRDNzYxMUZDLUE0OEYtNEI5Ny1BRUQwLTExOTA2OUI0NjUxMV9hZTIzMzFkZS1hMmQyLTQwNDItOTNmZi1hMjEyZjQwZTVkNDMiDQp9"
 		}
 	}
 }
