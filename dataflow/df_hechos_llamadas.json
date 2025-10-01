@@ -66,6 +66,9 @@
 				},
 				{
 					"name": "lookup4"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -148,10 +151,11 @@
 				"          fecha as string",
 				"     ),",
 				"     errors: true) ~> castFecha",
-				"lookup3, dimHora lookup(source1@HORA == hora_texto,",
+				"derivedColumn1, dimHora lookup(ERROR_FUNCTION('') == hora_texto,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup4"
+				"     broadcast: 'auto')~> lookup4",
+				"lookup3 derive(HORA = trim(HORA)) ~> derivedColumn1"
 			]
 		}
 	}
