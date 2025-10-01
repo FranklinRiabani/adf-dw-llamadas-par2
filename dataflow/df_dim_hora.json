@@ -60,7 +60,8 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 derive(HORA = iifNull(HORA, \"00:00:01\", HORA)) ~> derivedColumn1",
-				"derivedColumn1 derive(HORA = trim(HORA)) ~> derivedColumn2",
+				"derivedColumn1 derive(HORA = trim(HORA),",
+				"          hora_texto = HORA) ~> derivedColumn2",
 				"derivedColumn2 sort(asc(HORA, true)) ~> sort1",
 				"sort1 aggregate(groupBy(HORA),",
 				"     each(match(name!=\"HORA\"), $$ = first($$))) ~> aggregate1",
@@ -86,7 +87,8 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          hora = HORA",
+				"          hora = HORA,",
+				"          hora_texto",
 				"     )) ~> sink1"
 			]
 		}
